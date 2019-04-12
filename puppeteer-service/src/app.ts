@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import lusca from 'lusca';
 import dotenv from 'dotenv';
 import fs from 'fs';
-// import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer';
 
 // Load environment variables from .env file, where API keys and passwords are configured
 if (fs.existsSync('.env')) {
@@ -17,7 +17,7 @@ if (fs.existsSync('.env')) {
 const app = express();
 
 // Express configuration
-app.set('port', process.env.PORT || 7100);
+app.set('port', process.env.PORT || 7200);
 
 // @ts-ignore:
 app.use(compression());
@@ -30,8 +30,15 @@ app.use(lusca.xssProtection(true));
  * API routes.
  */
 app.get('/test', async (req: Request, res: Response) => {
-    console.log('OK!');
-    res.json('I\'m OK! Tnx!');
+    const browser = await puppeteer.connect({
+        browserWSEndpoint: process.env.BROWSERLESS_ENDPOINT || 'ws://localhost:7101',
+    });
+    const page = await browser.newPage();
+    await page.goto('https://github.com');
+    await page.screenshot({path: '/tmp/screenshot.png'});
+    await page.close();
+    browser.disconnect();
+    res.json('I did it! Tnx!');
 });
 
 export default app;
