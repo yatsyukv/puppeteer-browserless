@@ -2,7 +2,7 @@ version: '3.3'
 services:
   puppeteer-service:
     image: puppeteer-service:dev
-    command: npm start
+    command: npm run watch-debug
     container_name: puppeteer-service
     networks:
       - puppeteer-service
