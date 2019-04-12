@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  puppeteer-service:
+    image: puppeteer-service:dev
+    command: npm start
+    container_name: puppeteer-service
+    networks:
+      - puppeteer-service
+    build:
+      context: puppeteer-service/.
+    volumes:
+      - ./puppeteer-service:/var/www/html
+      - /var/www/html/node_modules
+      - /var/www/html/dist
+    environment:
+      - NODE_ENV=dev
+      - PORT=80
+      - SENTRY_DSN=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_REGION=
+    ports:
+      - "7100:80"
+      - "8229:9229"
+  browserless:
+    image: browserless/chrome:latest
+    container_name: puppeteer-service-browserless
+    networks:
+      - puppeteer-service
+    environment:
+      - NODE_ENV=dev
+      - MAX_CONCURRENT_SESSIONS=20
+      - PREBOOT_CHROME=true
+      - KEEP_ALIVE=true
+      - CHROME_REFRESH_TIME=3600000
+      - ENABLE_CORS=true
+      - EXIT_ON_HEALTH_FAILURE=true
+    ports:
+      - "7101:3000"
+networks:
+  puppeteer-service:

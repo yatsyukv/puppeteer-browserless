@@ -1,0 +1,32 @@
+/dist
+/node_modules
+
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+#transpiled JS
+src/**/*.js
+src/**/*.js.map
+/tests/**/*.js
+/tests/**/*.js.map
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
+
+# Ignore output from cov○○erage report
+coverage
