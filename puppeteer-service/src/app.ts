@@ -32,13 +32,16 @@ app.use(lusca.xssProtection(true));
 app.get('/test', async (req: Request, res: Response) => {
     const browser = await puppeteer.connect({
         browserWSEndpoint: process.env.BROWSERLESS_ENDPOINT || 'ws://localhost:7101',
+        defaultViewport: {width: 1200, height: 900, isMobile: false}
     });
     const page = await browser.newPage();
     await page.goto('https://github.com');
-    await page.screenshot({path: '/tmp/screenshot.png'});
+    const buffer = await page.screenshot({path: '/tmp/screenshot.png'});
     await page.close();
     browser.disconnect();
-    res.json('I did it! Tnx!');
+    res.contentType('image/png');
+    res.send(buffer);
+    console.log(`I did it! ^||__(*_*)__||^`)
 });
 
 export default app;
